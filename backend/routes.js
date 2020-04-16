@@ -2,6 +2,7 @@ const albumsController = require('./modules/controllers/albumsController');
 const artistsController = require('./modules/controllers/artistsController');
 const songsController = require('./modules/controllers/songsController');
 const playlistsController = require('./modules/controllers/playlistsController');
+const usersController = require('./modules/controllers/usersController');
 
 function routes(app) {
 	app.route('/albums/list')
@@ -52,7 +53,12 @@ function routes(app) {
 	app.route('/playlists/update')
 		.post(playlistsController.updatePlaylist)
 	
-}
+	app.route('/users/add')
+		.post(usersController.addUser)
+
+	app.route('/users/authenticate')
+		.post(usersController.authenticateUser)
+}	
 
 
 module.exports = routes;
