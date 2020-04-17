@@ -1,15 +1,16 @@
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import React from 'react';
-import Login from './pages/Login';
-import Next from './pages/Next';
- 
+import Menu from './Dashboard/index';
+import Login from './Login/index'
+
 
 export default function Routes(){
     return(
         <BrowserRouter>
             <Switch>
+                
                 <Route path="/" exact component={Login}/>
-                <Route path="/next" component={Next}/>
+                <Route path="/menu" component={Menu}/>
                 
             </ Switch>
 
