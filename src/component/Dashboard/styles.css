@@ -1,0 +1,38 @@
+.dashboard-container {
+    width: 100%;
+    max-width: 1120px;
+    padding: 0 30px;
+    margin: 130px auto 32px auto;
+}
+
+.dashboard-container .container {
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dashboard-container .container .box-buttom {
+    /*width: 100%;*/
+    margin: 25px auto; 
+}
+
+.dashboard-container .container .button-menu {
+    
+    align-items: left;
+    justify-content: space-between;
+}
+
+.dashboard-container .container .button-menu {
+    background: #FFF; /*1DB954*/
+    border: 0;
+    border-radius: 8px;
+    padding: 8px 35px;
+    font-size: 16px;
+    font-weight: bold;
+    color:#7b5900; /*b48300*/
+    cursor: pointer;
+}
+
+.dashboard-container .container .button-menu:hover{
+    opacity: 0.8;
+}
+
