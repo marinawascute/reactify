@@ -37,7 +37,7 @@ module.exports.addSong = async function (data) {
 }
 
 module.exports.deleteSong = async function (data) {
-    songs.doc(data).delete();
+    songs.doc(data.id).delete();
     return 200;
 }
 

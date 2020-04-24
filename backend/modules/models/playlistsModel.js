@@ -37,7 +37,7 @@ module.exports.addPlaylist = async function (data) {
 }
 
 module.exports.deletePlaylist = async function (data) {
-    playlists.doc(data).delete();
+    playlists.doc(data.id).delete();
     return 200;
 }
 

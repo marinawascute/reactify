@@ -43,7 +43,12 @@ const Songs = () => {
 
     function getData() {
         api.get("/songs/list").then((res) => {
-            setState({ columns: state.columns, data: res.data });
+            let data = res.data.filter((x => {
+                if (x.email === localStorage.getItem("email")) {
+                    return x;
+                }
+            }))
+            setState({ columns: state.columns, data: data });
         });
     }
 
@@ -72,7 +77,7 @@ const Songs = () => {
                                 resolve();
                                 setState((prevState) => {
                                     const data = [...prevState.data];
-                                    api.post('/songs/add', { name: newData.name }).then(
+                                    api.post('/songs/add', { name: newData.name, email: localStorage.getItem("email")  }).then(
                                         () => {
                                             setListed(false)
                                         }

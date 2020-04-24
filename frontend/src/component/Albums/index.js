@@ -24,7 +24,12 @@ const Albums = () => {
 
     function getData() {
         api.get("/albums/list").then((res) => {
-            setState({columns:state.columns, data:res.data});
+            let data = res.data.filter((x => {
+                if (x.email === localStorage.getItem("email")) {
+                    return x;
+                }
+            }))
+            setState({columns:state.columns, data:data});
         });
     }
 
@@ -49,7 +54,7 @@ const Albums = () => {
                                 resolve();
                                 setState((prevState) => {
                                     const data = [...prevState.data];
-                                    api.post('/albums/add', { name: newData.name }).then(
+                                    api.post('/albums/add', { name: newData.name, email: localStorage.getItem("email")  }).then(
                                         () => {
                                             setListed(false)
                                         }

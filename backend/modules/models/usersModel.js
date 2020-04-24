@@ -26,16 +26,16 @@ module.exports.authenticateUser = async function (data) {
     });
 }
 
-module.exports.dashboardCounts = async function () {
+module.exports.dashboardCounts = async function (data) {
     return new Promise((resolve, reject) => {
         let response = {};
-        albums.get().then(album => {
+        albums.where('email' ,'==', data.email).get().then(album => {
             response.albums = album.size;
-            playlists.get().then(playlist => {
+            playlists.where('email' ,'==', data.email).get().then(playlist => {
                 response.playlists = playlist.size;
-                songs.get().then(song => {
+                songs.where('email' ,'==', data.email).get().then(song => {
                     response.songs = song.size;
-                    artists.get().then(artist => {
+                    artists.where('email' ,'==', data.email).get().then(artist => {
                         response.artists = artist.size;
                         resolve(response);
                     })
