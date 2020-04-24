@@ -19,7 +19,12 @@ const Artists = () => {
 
     function getData() {
         api.get("/artists/list").then((res) => {
-            setState({ columns: state.columns, data: res.data });
+            let data = res.data.filter((x => {
+                if (x.email === localStorage.getItem("email")) {
+                    return x;
+                }
+            }))
+            setState({ columns: state.columns, data: data });
         });
     }
 
@@ -42,7 +47,7 @@ const Artists = () => {
                                 resolve();
                                 setState((prevState) => {
                                     const data = [...prevState.data];
-                                    api.post('/artists/add', { name: newData.name }).then(
+                                    api.post('/artists/add', { name: newData.name, email: localStorage.getItem("email") }).then(
                                         () => {
                                             setListed(false)
                                         }

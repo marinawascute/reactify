@@ -22,7 +22,12 @@ const Playlists = () => {
 
     function getData() {
         api.get("/playlists/list").then((res) => {
-            setState({ columns: state.columns, data: res.data });
+            let data = res.data.filter((x => {
+                if (x.email === localStorage.getItem("email")) {
+                    return x;
+                }
+            }))
+            setState({ columns: state.columns, data: data });
         });
     }
 
@@ -46,7 +51,7 @@ const Playlists = () => {
                         resolve();
                         setState((prevState) => {
                             const data = [...prevState.data];
-                            api.post('/playlists/add', { name: newData.name }).then(
+                            api.post('/playlists/add', { name: newData.name, email: localStorage.getItem("email")  }).then(
                                 () => {
                                     setListed(false)
                                 }

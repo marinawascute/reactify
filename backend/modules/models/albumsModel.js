@@ -37,7 +37,7 @@ module.exports.addAlbum = async function (data) {
 }
 
 module.exports.deleteAlbum = async function (data) {
-    albums.doc(data).delete();
+    albums.doc(data.id).delete();
     return 200;
 }
 

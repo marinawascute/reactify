@@ -128,7 +128,8 @@ const Home = () => {
     })
 
     async function getDashboard() {
-        await api.get("/dashboard").then((res) => {
+        await api.post("/dashboard",{email: localStorage.getItem("email")}).then((res) => {
+            
             setState({
                 albumCount : res.data.albums,
                 playlistCount : res.data.playlists,

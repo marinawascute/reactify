@@ -60,7 +60,7 @@ function routes(app) {
 		.post(usersController.authenticateUser)
 	
 	app.route('/dashboard')
-		.get(usersController.dashboardCounts)
+		.post(usersController.dashboardCounts)
 }	
 
 
