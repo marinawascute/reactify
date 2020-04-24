@@ -58,6 +58,9 @@ function routes(app) {
 
 	app.route('/users/authenticate')
 		.post(usersController.authenticateUser)
+	
+	app.route('/dashboard')
+		.get(usersController.dashboardCounts)
 }	
 
 

@@ -10,3 +10,7 @@ module.exports.authenticateUser = async function(req,res){
     res.sendStatus(response);
 }
 
+module.exports.dashboardCounts = async function(req,res) {
+    let response = await usersModel.dashboardCounts();
+    res.send(response);
+}
