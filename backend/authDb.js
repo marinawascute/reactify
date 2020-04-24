@@ -1,8 +1,6 @@
-//const firebase = require("firebase/app");
+const firebase = require('firebase');
 
-const admin = require('firebase-admin');
 
-/*
 let firebaseConfig = {
     apiKey: "AIzaSyCXyAJs6SxXhiU-ykcrK5sRsBC8QvE5WvQ",
     authDomain: "fylist-2b716.firebaseapp.com",
@@ -14,14 +12,8 @@ let firebaseConfig = {
     measurementId: "G-R567PW8RKQ"
 };
 
-firebase.initializeApp(firebaseConfig);*/
+firebase.initializeApp(firebaseConfig);
 
-let serviceAccount = require('./config/access.json');
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://fylist-2b716.firebaseio.com"
-});
-
-module.exports = admin;
+module.exports = firebase;
 

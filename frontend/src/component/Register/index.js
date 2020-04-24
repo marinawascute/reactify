@@ -23,12 +23,16 @@ export default function Register() {
         };
 
         try {
-            const response = await api.post('usuario', data);
-
-            alert(`Seu cadastro foi realizado com Sucesso! ${response.data.email}`);
-
-            history.push('/dashboard');
+            let response = await api.post('/users/add', data)
+            if(response.status !== 201){
+                alert(response.data);
+            }else{
+                history.push('/home');
+            }
+            
+            
         } catch (err) {
+            console.log(err)
             alert('Erro ao cadastrar, tente novamente.');
         }
     }

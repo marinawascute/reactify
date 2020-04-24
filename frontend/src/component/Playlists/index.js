@@ -2,6 +2,8 @@ import React from 'react';
 import Template from '../Template';
 //import { Link } from 'react-router-dom'; 
 import MaterialTable from 'material-table';
+import api from '../../services/api';
+
 
 const Playlists = () => {
 
@@ -11,10 +13,24 @@ const Playlists = () => {
             { title: 'Link', field: 'link' },
         ],
         data: [
-            { name: 'Eminem Kamikaze', link: 'https://open.spotify.com/playlist/5yWvLbYeygBWIT5tvb7Grp' },
         ],
     });
-  
+
+    const [listed, setListed] = React.useState({
+        listed: false
+    })
+
+    function getData() {
+        api.get("/playlists/list").then((res) => {
+            setState({ columns: state.columns, data: res.data });
+        });
+    }
+
+    React.useEffect(() => {
+        getData();
+    }, [listed]);
+
+
     return (
         <Template activeMenu="playlists">
             <h3>Playlists favoritas</h3>
@@ -30,6 +46,11 @@ const Playlists = () => {
                         resolve();
                         setState((prevState) => {
                             const data = [...prevState.data];
+                            api.post('/playlists/add', { name: newData.name }).then(
+                                () => {
+                                    setListed(false)
+                                }
+                            );
                             data.push(newData);
                             return { ...prevState, data };
                         });
@@ -42,6 +63,11 @@ const Playlists = () => {
                         if (oldData) {
                             setState((prevState) => {
                             const data = [...prevState.data];
+                            api.post('/playlists/update', { id: newData.id, name: newData.name }).then(
+                                () => {
+                                    setListed(false)
+                                }
+                            );
                             data[data.indexOf(oldData)] = newData;
                             return { ...prevState, data };
                             });
@@ -54,6 +80,7 @@ const Playlists = () => {
                         resolve();
                         setState((prevState) => {
                             const data = [...prevState.data];
+                            api.post('/playlists/delete', { id: oldData.id });
                             data.splice(data.indexOf(oldData), 1);
                             return { ...prevState, data };
                         });
