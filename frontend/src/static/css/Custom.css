@@ -1,0 +1,57 @@
+.content-bg {
+    /* background-image:  url("../../assets/background/background-2.png"); */
+    background-color: #FFF;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.img-icon a:hover {
+    background-color: #ffbb00;
+}
+
+.gray-color {
+    color: #FFF;
+}
+
+.blue-color {
+    color: #037fff;
+}
+
+.white-color {
+    color: #fff;
+}
+
+.solid-border-top {
+    border-top: 1px solid #000;
+    margin-top: 5px;
+    margin-bottom: 25px;
+    padding-top: 5px;
+}
+
+/* Telefones em paisagem e abaixo */
+@media (max-width: 480px) { 
+    .my-padding-top {
+        padding-top: 80px;
+    }
+}
+
+/* Telefones em paisagem a tablet em retrato */
+@media (max-width: 767px) {
+    .my-padding-top {
+        padding-top: 80px;
+    }
+}
+
+/* Tablet em retrato a paisagem e desktop */
+@media (min-width: 768px) and (max-width: 979px) {
+    .my-padding-top {
+        padding-top: 50px;
+    }
+}
+
+/* Desktop grande */
+@media (min-width: 1200px) {
+    .my-padding-top {
+        padding-top: 20px;
+    }
+}

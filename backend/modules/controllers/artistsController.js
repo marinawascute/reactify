@@ -1,7 +1,7 @@
 const artistsModel = require('../models/artistsModel');
 
 module.exports.listArtists = async function (req, res) {
-    let response = await artistsModel.listArtists()
+    let response = await artistsModel.listArtists();
     res.send(response);
 }
 

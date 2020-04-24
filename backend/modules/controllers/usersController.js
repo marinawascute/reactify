@@ -2,7 +2,7 @@ const usersModel = require('../models/usersModel');
 
 module.exports.addUser = async function(req,res){
     let response = await usersModel.addUser(req.body);
-    res.sendStatus(response);
+    res.send(response);
 }
 
 module.exports.authenticateUser = async function(req,res){
@@ -10,3 +10,7 @@ module.exports.authenticateUser = async function(req,res){
     res.sendStatus(response);
 }
 
+module.exports.dashboardCounts = async function(req,res) {
+    let response = await usersModel.dashboardCounts();
+    res.send(response);
+}

@@ -5,36 +5,49 @@ const playlists = firebase.collection("playlists");
 const uuidv4 = require('uuid/v4');
 
 
-module.exports.listPlaylists = async function (){
-    playlists.get().then(snapshot => {
-        if (snapshot.empty) {
-            console.log('No matching documents.');
-            return;
-        }
-        return (snapshot.map(x => {return {'id':x.id , 'data':x.data()}}));
-    })
-        .catch(err => {
-            console.log('Error getting documents', err);
-        });
-} 
+module.exports.listPlaylists = async function () {
+    return new Promise((resolve, reject) => {
 
-module.exports.addPlaylist = async function (data){
-    spotifyApi.searchPlaylists(data.name).then((result) => {
-        data.link = result.body.playlists.items[0].external_urls.spotify;
+        playlists.get().then(snapshot => {
+            if (snapshot.empty) {
+                console.log('No matching documents.');
+                reject();
+            }
+            let items = [];
+            snapshot.forEach(doc => {
+                items.push(Object.assign({}, { 'id': doc.id }, doc.data()));
+            });
+            resolve(items);
+        })
+            .catch(err => {
+                console.log('Error getting documents', err);
+            });
     });
-    playlists.doc(uuidv4()).set(data);
-    return 200;
 }
 
-module.exports.deletePlaylist = async function (data){
+module.exports.addPlaylist = async function (data) {
+    return new Promise((resolve, reject) => {
+        spotifyApi.searchPlaylists(data.name).then((result) => {
+            data.link = result.body.playlists.items[0].external_urls.spotify;
+            playlists.doc(uuidv4()).set(data).then(() => {
+                resolve(200)
+            });
+        });
+    });
+}
+
+module.exports.deletePlaylist = async function (data) {
     playlists.doc(data).delete();
     return 200;
 }
 
 module.exports.updatePlaylist = async function (data) {
-    spotifyApi.searchPlaylists(data.name).then((result) => {
-        data.link = result.body.playlists.items[0].external_urls.spotify;
+    return new Promise((resolve, reject) => {
+        spotifyApi.searchPlaylists(data.name).then((result) => {
+            let link = result.body.playlists.items[0].external_urls.spotify;
+            playlists.doc(data.id).update({ name: data.name, link: link }).then(() => {
+                resolve(200)
+            });
+        });
     });
-    playlists.doc(data.id).update(data.data);
-    return 200;
 }

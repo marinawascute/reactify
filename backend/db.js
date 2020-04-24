@@ -2,7 +2,6 @@
 
 const admin = require('firebase-admin');
 
-
 /*
 let firebaseConfig = {
     apiKey: "AIzaSyCXyAJs6SxXhiU-ykcrK5sRsBC8QvE5WvQ",

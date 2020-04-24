@@ -1,86 +1,39 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
-
-*{
-  margin: 0;
-  padding: 0;
- outline: 0;
- box-sizing: border-box;
+.App {
+    text-align: center;
+}
+  
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+  
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
 }
 
-html, body, #root{
-min-height: 100%;
-}
-
-body{
-  background: black url('./assets/studio.jpg') no-repeat;
-  background-size: cover;
-  -webkit-font-smoothing: antialiased !important;
-}
-
-body, input, button{
-  font-family: 'Roboto', Arial, Helvetica, sans-serif;
-  font-size: 14px;
-}
-
-.container{
-  margin: 80px auto 0;
-  max-width: 450px;
-  width: 100%;
+.App-header {
+  background-color: #ffffff;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: #000;
 }
 
-.content {
-  margin-top:50px;
-  width: 100%;
-  border-radius: 4px;
-  padding: 30px;
-  background-color: white;
+.App-link {
+  color: #000;
 }
 
- .content > p{
-   font-size: 22px;
-   line-height: 30px;
-   margin-bottom: 30px;
- }
-
- .content form{
-    display: flex;
-    flex-direction: column;
- }
-
- .content form label{
-   font-size: 14px;
-   color: black;
-   font-weight: bold;
-   margin-bottom: 8px;
- }
-
- .content form input{
-   margin-bottom: 20px;
-   border: 1px solid #ddd;
-   border-radius: 4px;
-   height: 45px;
-   padding: 0 15px;
-   font-size: 16px;
- }
-
- .content button.btn{
-   background: #1DB954;
-   border: 0;
-   border-radius: 2px;
-   width: 100%;
-   height: 42px;
-   padding: 0 20px;
-   font-size: 16px;
-   font-weight: bold;
-   color: white;
-   cursor: pointer;
- }
-
- .content button.btn:hover{
-   background: #1DB980;
- }
-
- 
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+  

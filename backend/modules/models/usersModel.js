@@ -1,40 +1,46 @@
-const spotifyApi = require("../middlewares/spotify-api");
-const db = require('../../db');
-const firebase = db.firestore();
-const users = firebase.collection("user");
-const uuidv4 = require('uuid/v4');
+const db = require("../../authDb");
+const firebase = require("../../db");
+const firestore = firebase.firestore();
+const albums = firestore.collection("albums");
+const artists = firestore.collection("artists");
+const playlists = firestore.collection("playlists");
+const songs = firestore.collection("songs");
 
 module.exports.addUser = async function (data) {
-    users.where('name', '==', data.email).get().then(
-        snapshot => {
-            if (snapshot.empty) {
-                users.doc(uuidv4()).set(data);
-                return 201;
-            }else {
-                return 409,"Already exists.";
-            }
+    return new Promise((resolve, reject) => {
+        db.auth().createUserWithEmailAndPassword(data.email, data.password).then(() => {
+            resolve(201)
+        }).catch(err => {
+            resolve(err.message);
         })
-        .catch(err => {
-            console.log('Error getting documents', err);
-            return 403
     });
 }
 
 module.exports.authenticateUser = async function (data) {
-    users.where('name', '==', data.email).get().then(
-        snapshot => {
-            if (snapshot.empty) {
-                return 403;
-            }
-            if (snapshot[0].data().password == data.password) {
-                return 200;
-            } else {
-                return 403;
-            }
+    return new Promise((resolve, reject) => {
+        db.auth().signInWithEmailAndPassword(data.email, data.password).then(() => {
+            resolve(200)
+        }).catch(err => {
+            resolve(403);
         })
-        .catch(err => {
-            console.log('Error getting documents', err);
-            return 403
-        });
+    });
 }
 
+module.exports.dashboardCounts = async function () {
+    return new Promise((resolve, reject) => {
+        let response = {};
+        albums.get().then(album => {
+            response.albums = album.size;
+            playlists.get().then(playlist => {
+                response.playlists = playlist.size;
+                songs.get().then(song => {
+                    response.songs = song.size;
+                    artists.get().then(artist => {
+                        response.artists = artist.size;
+                        resolve(response);
+                    })
+                })
+            })
+        })
+    });
+}

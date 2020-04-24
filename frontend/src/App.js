@@ -1,21 +1,37 @@
 import React from 'react';
-import './App.css';
+import { Route, HashRouter, Switch } from 'react-router-dom';
 
 
-import Routes from './routes';
+import Login from './component/Login';
+import Register from './component/Register';
+import Dashboard from './component/Dashboard';
+import Albums from './component/Albums';
+import Artists from './component/Artists';
+import Playlists from './component/Playlists';
+import Songs from './component/Songs';
+
+import PageNotFound from './component/PageNotFound/PageNotFound';
+
+import './static/css/Style.css';
+import './static/css/Custom.css';
+
+import './static/css/Main.css';
 
 function App() {
-  
   return (
-   <div className="container">
-     
-     <div className="content">
+    <HashRouter>
+      <Switch>
+        <Route path="/" exact={true} component={Login}/>
+        <Route path="/register" exact={true} component={Register}/>
+        <Route path="/home" exact={true} component={Dashboard}/>
+        <Route path="/albums" exact={true} component={Albums}/>
+        <Route path="/artists" exact={true} component={Artists}/>
+        <Route path="/playlists" exact={true} component={Playlists}/>
+        <Route path="/songs" exact={true} component={Songs}/>
 
-       <Routes />
-     
-     </div>
-    
-   </div>
+        <Route component={PageNotFound}/>
+      </Switch>
+    </HashRouter>
   );
 }
 
