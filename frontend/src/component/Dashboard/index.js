@@ -13,6 +13,9 @@ import AlbumRoundedIcon from '@material-ui/icons/AlbumRounded';
 import StarsRoundedIcon from '@material-ui/icons/StarsRounded';
 import PlaylistPlayRoundedIcon from '@material-ui/icons/PlaylistPlayRounded';
 
+import api from '../../services/api'
+
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -111,75 +114,102 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Home = () => {
-    
+
     const [spacing] = React.useState(2);
     const classes = useStyles();
+    const [counts, setState] = React.useState({
+        albumCount: 0,
+        playlistCount: 0,
+        songCount: 0,
+        artistCount: 0
+    });
+    const [listed, setListed] = React.useState({
+        listed: false
+    })
+
+    async function getDashboard() {
+        await api.get("/dashboard").then((res) => {
+            setState({
+                albumCount : res.data.albums,
+                playlistCount : res.data.playlists,
+                songCount : res.data.songs,
+                artistCount : res.data.artists
+            })
+
+        }).catch(err => console.log(err));
+        //console.log(res)
+    }
+
+
+    React.useEffect(() => {
+        getDashboard();
+    }, [listed]);
 
     return (
         <Template activeMenu="home">
-        <div className="row">
-            <div className="col-lg-10 col-12">
-                <div className="mi-home-content">
-                    <h3>Dashboard</h3>
+            <div className="row">
+                <div className="col-lg-10 col-12">
+                    <div className="mi-home-content">
+                        <h3>Dashboard</h3>
+                    </div>
                 </div>
             </div>
-        </div>
-        <br/><br/>
-        <div className={classes.root}>
-            <Grid container spacing={3}>
-                <Grid item xs={6} sm={3}>
-                    <Paper className={classes.dash1}>
-                    <ListItemIcon style={{ color: '#2196f3', minWidth: 30 }} ><MusicNoteRoundedIcon/></ListItemIcon>
-                    Músicas favoritas:<strong style={{ marginLeft: 5 }}>0</strong>
-                    </Paper>
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                    <Paper className={classes.dash2}>
-                    <ListItemIcon style={{ color: '#f44336', minWidth: 30 }} ><AlbumRoundedIcon/></ListItemIcon>
-                    Álbuns favoritos:<strong style={{ marginLeft: 5 }}>0</strong>
-                    </Paper>
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                    <Paper className={classes.dash3}>
-                    <ListItemIcon style={{ color: '#808080', minWidth: 30 }}><PlaylistPlayRoundedIcon/></ListItemIcon>
-                    Playlists favoritas:<strong style={{ marginLeft: 5 }}>0</strong>
-                    </Paper>
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                    <Paper className={classes.dash4}>
-                    <ListItemIcon style={{ color: '#9c27b0', minWidth: 30 }}><StarsRoundedIcon /></ListItemIcon>
-                    Artistias favoritos:<strong style={{ marginLeft: 5 }}>0</strong>
-                    </Paper>
-                </Grid>
-            </Grid>
-            <br/><br/><br/>
-            <Grid container spacing={3}>
-                <Grid item xs={12}>
-                    <Paper className={classes.paper} style={{ paddingLeft: 0 }}><strong>Adicionados recentimente</strong></Paper>
-                </Grid>
-                
-                <Grid item xs={12}>
-                    <Grid container justify="flex-start" spacing={spacing}>
-                        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((value) => (
-                            <Grid key={value} item>
-                            <div className={classes.root}>
-                            <Paper className={classes.boximg}>
-                                <Grid container spacing={2}>
-                                    <Grid item>
-                                        <ButtonBase className={classes.image}>
-                                        <img className={classes.img} alt="complex" src="https://upload.wikimedia.org/wikipedia/pt/thumb/3/3f/The_Beatles_-_Let_It_Be.jpg/220px-The_Beatles_-_Let_It_Be.jpg" />
-                                        </ButtonBase>
-                                    </Grid>
-                                </Grid>
-                            </Paper>
-                            </div>
-                            </Grid>
-                        ))}
+            <br /><br />
+            <div className={classes.root}>
+                <Grid container spacing={3}>
+                    <Grid item xs={6} sm={3}>
+                        <Paper className={classes.dash1}>
+                            <ListItemIcon style={{ color: '#2196f3', minWidth: 30 }} ><MusicNoteRoundedIcon /></ListItemIcon>
+                    Músicas favoritas:<strong style={{ marginLeft: 5 }}>{counts.songCount}</strong>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={6} sm={3}>
+                        <Paper className={classes.dash2}>
+                            <ListItemIcon style={{ color: '#f44336', minWidth: 30 }} ><AlbumRoundedIcon /></ListItemIcon>
+                    Álbuns favoritos:<strong style={{ marginLeft: 5 }}>{counts.albumCount}</strong>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={6} sm={3}>
+                        <Paper className={classes.dash3}>
+                            <ListItemIcon style={{ color: '#808080', minWidth: 30 }}><PlaylistPlayRoundedIcon /></ListItemIcon>
+                    Playlists favoritas:<strong style={{ marginLeft: 5 }}>{counts.playlistCount}</strong>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={6} sm={3}>
+                        <Paper className={classes.dash4}>
+                            <ListItemIcon style={{ color: '#9c27b0', minWidth: 30 }}><StarsRoundedIcon /></ListItemIcon>
+                    Artistias favoritos:<strong style={{ marginLeft: 5 }}>{counts.artistCount}</strong>
+                        </Paper>
                     </Grid>
                 </Grid>
-            </Grid>
-        </div>
-       
+                <br /><br /><br />
+                {/* <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <Paper className={classes.paper} style={{ paddingLeft: 0 }}><strong>Adicionados recentimente</strong></Paper>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <Grid container justify="flex-start" spacing={spacing}>
+                            {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((value) => (
+                                <Grid key={value} item>
+                                    <div className={classes.root}>
+                                        <Paper className={classes.boximg}>
+                                            <Grid container spacing={2}>
+                                                <Grid item>
+                                                    <ButtonBase className={classes.image}>
+                                                        <img className={classes.img} alt="complex" src="https://upload.wikimedia.org/wikipedia/pt/thumb/3/3f/The_Beatles_-_Let_It_Be.jpg/220px-The_Beatles_-_Let_It_Be.jpg" />
+                                                    </ButtonBase>
+                                                </Grid>
+                                            </Grid>
+                                        </Paper>
+                                    </div>
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </Grid>
+                </Grid> */}
+            </div>
+
         </Template>
 
     )
