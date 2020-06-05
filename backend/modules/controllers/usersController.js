@@ -7,7 +7,12 @@ module.exports.addUser = async function(req,res){
 
 module.exports.authenticateUser = async function(req,res){
     let response = await usersModel.authenticateUser(req.body);
-    res.sendStatus(response);
+    if(response.token){
+        res.cookie('token', response.token, { httpOnly: true })
+        .sendStatus(200);
+    }else{
+        res.sendStatus(response);
+    }
 }
 
 module.exports.dashboardCounts = async function(req,res) {

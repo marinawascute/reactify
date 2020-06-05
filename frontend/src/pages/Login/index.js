@@ -7,17 +7,15 @@ import api from '../../services/api';
 export default function Login({ history}){
     const [email,setEmail] = useState('');
     const [password, setPassword] = useState('');  
-    console.log(email)
-    console.log(password)
 
-  async function handleSubmit(event){
+    async function handleSubmit(event){
     event.preventDefault();
     
-    const response = await api.post('/sessions', {email: email});
+    const response = await api.post('/users/authenticate', {email: email, password:password});
     console.log(response);
-    const {_id}=response.data;
+    // const {_id}=response.data;
 
-    localStorage.setItem('user', _id);
+    // localStorage.setItem('user', _id);
 
     history.push('/dashboard');
     
