@@ -26,15 +26,23 @@ module.exports.listArtists = async function () {
 
 module.exports.addArtist = async function (data) {
     return new Promise((resolve, reject) => {
-        spotifyApi.searchArtists(data.name).then((result) => {
-            data.link = result.body.artists.items[0].external_urls.spotify;
-            artists.doc(uuidv4()).set(data).then(() => {
-                resolve(200)
-            });
+        artists.doc(uuidv4()).set(data).then(() => {
+            resolve(200)
         });
     });
 
 }
+// module.exports.addArtist = async function (data) {
+//     return new Promise((resolve, reject) => {
+//         spotifyApi.searchArtists(data.name).then((result) => {
+//             data.link = result.body.artists.items[0].external_urls.spotify;
+//             artists.doc(uuidv4()).set(data).then(() => {
+//                 resolve(200)
+//             });
+//         });
+//     });
+
+// }
 
 module.exports.deleteArtist = async function (data) {
     artists.doc(data.id).delete();
@@ -48,6 +56,16 @@ module.exports.updateArtist = async function (data) {
             artists.doc(data.id).update({ name: data.name, link: link }).then(() => {
                 resolve(200)
             });
+        });
+    });
+
+}
+
+module.exports.searchArtist = async function (data) {
+    return new Promise((resolve, reject) => {
+        spotifyApi.searchArtists(data.name).then((result) => {
+            let searchResults = result.body.artists.items.slice(0, 4);
+            resolve(searchResults);
         });
     });
 

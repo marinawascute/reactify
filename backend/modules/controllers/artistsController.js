@@ -10,6 +10,10 @@ module.exports.addArtist = async function(req,res){
     res.sendStatus(response);
 }
 
+module.exports.searchArtist = async function(req,res){
+    let response = await artistsModel.searchArtist(req.body);
+    res.send(response);
+}
 
 module.exports.updateArtist = async function(req,res){
     let response = await artistsModel.updateArtist(req.body);

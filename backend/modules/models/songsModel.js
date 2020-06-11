@@ -24,14 +24,31 @@ module.exports.listSongs = async function () {
     });
 }
 
+// module.exports.addSong = async function (data) {
+//     return new Promise((resolve, reject) => {
+//         spotifyApi.searchTracks(data.name).then((result) => {
+//             data.link = result.body.tracks.items[0].external_urls.spotify;
+//             data.artist = result.body.tracks.items[0].artists[0].name;
+//             songs.doc(uuidv4()).set(data).then(() => {
+//                 resolve(200)
+//             });
+//         });
+//     });
+// }
+
+module.exports.addSong = async function (data) {
+    return new Promise((resolve, reject) => {
+        songs.doc(uuidv4()).set(data).then(() => {
+            resolve(200)
+        });
+    });
+}
+
 module.exports.addSong = async function (data) {
     return new Promise((resolve, reject) => {
         spotifyApi.searchTracks(data.name).then((result) => {
-            data.link = result.body.tracks.items[0].external_urls.spotify;
-            data.artist = result.body.tracks.items[0].artists[0].name;
-            songs.doc(uuidv4()).set(data).then(() => {
-                resolve(200)
-            });
+            let searchResults = result.body.tracks.items.slice(0, 4);
+            resolve(searchResults)
         });
     });
 }

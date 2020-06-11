@@ -25,13 +25,30 @@ module.exports.listPlaylists = async function () {
     });
 }
 
-module.exports.addPlaylist = async function (data) {
+// module.exports.addPlaylist = async function (data) {
+//     return new Promise((resolve, reject) => {
+//         spotifyApi.searchPlaylists(data.name).then((result) => {
+//             data.link = result.body.playlists.items[0].external_urls.spotify;
+//             playlists.doc(uuidv4()).set(data).then(() => {
+//                 resolve(200)
+//             });
+//         });
+//     });
+// }
+
+module.exports.searchPlaylist = async function (data) {
     return new Promise((resolve, reject) => {
         spotifyApi.searchPlaylists(data.name).then((result) => {
-            data.link = result.body.playlists.items[0].external_urls.spotify;
-            playlists.doc(uuidv4()).set(data).then(() => {
-                resolve(200)
-            });
+            let searchResults = result.body.playlists.items.slice(0, 4);
+            resolve(searchResults)
+        });
+    });
+}
+
+module.exports.addPlaylist = async function (data) {
+    return new Promise((resolve, reject) => {
+        playlists.doc(uuidv4()).set(data).then(() => {
+            resolve(200)
         });
     });
 }
