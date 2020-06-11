@@ -1,10 +1,36 @@
-import React from 'react';
+import React, {useState, useMemo} from 'react';
 import Template from '../Template';
+import Input from '@material-ui/core/Input'
+import Button from '@material-ui/core/Button'
 //import { Link } from 'react-router-dom'; 
 import MaterialTable from 'material-table';
 import api from '../../services/api';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+    novo: {
+        width: 200,
+        marginLeft: 50,
+      
+    },
+    btn: {
+        background: 'grey',
+        borderRadius: '20',
+        width: 50,
+        height: 20,
+    },
+    cont: {
+        width: 400,
+        
+        display: 'flex',
+        flexDirection:'row',
+        alignItems: 'center'
+    }
+  }));
 
 const Artists = () => {
+
+    const classes = useStyles();
     const [state, setState] = React.useState({
         columns: [
             { title: 'Artista', field: 'name' },
@@ -16,6 +42,16 @@ const Artists = () => {
     const [listed, setListed] = React.useState({
         listed: false
     })
+
+    const [name, setName] = React.useState('')
+
+    
+    function handleSubmit(e) {
+        
+        api.post('', {
+            artist: name, email: localStorage.getItem("email")
+        }).then(()=>{setListed(false)}).catch(err=>console.log(err))
+    }
 
     function getData() {
         api.get("/artists/list").then((res) => {
@@ -32,63 +68,77 @@ const Artists = () => {
         getData();
     }, [listed]);
 
+    
+        let artists = [{'id': 1, 'image': 'url.document.image', 'name': 'BOD'}]
+        
+    
+
+    /*const [thumbnail, setThumbnail] = useState(null);
+
+    const preview = useMemo(()=>{
+        return thumbnail ? URL.createObjectURL(thumbnail) : null;
+    }, [thumbnail])*/
+
     return (
+        
         <Template activeMenu="artists">
             <h3>Artistas favoritos</h3>
             <br /><br />
-            <MaterialTable
-                title="Meus artistas favoritos"
-                columns={state.columns}
-                data={state.data}
-                editable={{
-                    onRowAdd: (newData) =>
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                                setState((prevState) => {
-                                    const data = [...prevState.data];
-                                    api.post('/artists/add', { name: newData.name, email: localStorage.getItem("email") }).then(
-                                        () => {
-                                            setListed(false)
-                                        }
-                                    );
-                                    data.push(newData);
-                                    return { ...prevState, data };
-                                });
-                            }, 600);
-                        }),
-                    onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                                if (oldData) {
-                                    setState((prevState) => {
-                                        const data = [...prevState.data];
-                                        api.post('/artists/update', { id: newData.id, name: newData.name }).then(
-                                            () => {
-                                                setListed(false)
-                                            }
-                                        );
-                                        data[data.indexOf(oldData)] = newData;
-                                        return { ...prevState, data };
-                                    });
-                                }
-                            }, 600);
-                        }),
-                    onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                                setState((prevState) => {
-                                    const data = [...prevState.data];
-                                    api.post('/artists/delete', { id: oldData.id });
-                                    data.splice(data.indexOf(oldData), 1);
-                                    return { ...prevState, data };
-                                });
-                            }, 600);
-                        }),
-                }}
-            />
+            <div className={classes.cont}>
+                <form onSubmit={handleSubmit} className={classes.novo} noValidate autoComplete="off">
+                <Input
+                placeholder='Search'
+                onChange={(event)=>{setName(event.target.value)}}
+                
+                />
+                
+                </form>
+                <Button variant='contained' className={classes.btn} onClick={()=>{handleSubmit()}}>Search</Button>
+            
+            </div>
+
+            <div style={{
+                background: '#F6F6F6',
+                borderRadius: '22',
+                width: 300,
+                height: 300,
+                marginTop:10,
+            }}>
+                {artists.map(artist=> (
+                 <li key={artist.id} style={{
+                    style:'none',
+                    marginTop: 20,
+                    padding: 0,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    width: '100%',
+
+                 }}
+                 key={artist.id}
+                 >
+                        <div style={{  
+                            backgroundImage: `${artist.image}`, 
+                            
+                            background: '#018F',
+                            borderRadius: '50%',
+                            marginLeft: 20,
+                            width: 40,
+                            height: 40,
+
+                        }}/>
+                        
+                        <span style={{
+                            marginLeft: 20,
+                            fontSize: 13,
+                        }}>
+                            {artist.name}
+                        </span>
+                      
+                </li>
+                ))}
+            </div>
+        
         </Template>
     )
 }
