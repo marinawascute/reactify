@@ -10,6 +10,10 @@ module.exports.addSong = async function(req,res){
     res.sendStatus(response);
 }
 
+module.exports.searchSong = async function(req,res){
+    let response = await songsModel.searchSong(req.body);
+    res.send(response);
+}
 
 module.exports.updateSong = async function(req,res){
     let response = await songsModel.updateSong(req.body);

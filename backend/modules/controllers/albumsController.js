@@ -10,6 +10,10 @@ module.exports.addAlbum = async function(req,res){
     res.sendStatus(response);
 }
 
+module.exports.searchAlbum = async function(req,res){
+    let response = await albumsModel.searchAlbum(req.body);
+    res.send(response);
+}
 
 module.exports.updateAlbum = async function(req,res){
     let response = await albumsModel.updateAlbum(req.body);
