@@ -17,7 +17,7 @@ export default function Login({ history }) {
     event.preventDefault();
     try {
       let response = await api.post('/users/authenticate', { email: email, password: password });
-      localStorage.setItem("email",email);
+
       history.push('/home');
     } catch (error) {
       alert("Email ou senha errados!")

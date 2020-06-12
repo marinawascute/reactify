@@ -4,6 +4,10 @@ import Template from '../Template';
 import { makeStyles } from '@material-ui/core/styles';
 import MaterialTable from 'material-table';
 import api from '../../services/api';
+import useModal from '../../component/modal/useModal'
+import Message from '../../component/modal/Message'
+import Button from "@material-ui/core/Button"
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -43,12 +47,7 @@ const Songs = () => {
 
     function getData() {
         api.get("/songs/list").then((res) => {
-            let data = res.data.filter((x => {
-                if (x.email === localStorage.getItem("email")) {
-                    return x;
-                }
-            }))
-            setState({ columns: state.columns, data: data });
+            setState({ columns: state.columns, data: res.data });
         });
     }
 
@@ -56,77 +55,96 @@ const Songs = () => {
         getData();
     }, [listed]);
 
+    async function handleSearch(name, setData) {
+
+        try {
+            const response = await api.post("/albums/search", {
+                name: name,
+            })
+
+            const data = response.data
+            setData({ data: data })
+
+        } catch (err) { (console.log(err.stack)) }
+    }
+
 
     const classes = useStyles();
+    const { isShowing, toggleModal, isEdit, toggleEdit } = useModal();
+
+    function onRowAdd(newData) {
+        new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+                api.post('/songs/add', { name: newData.name, link: newData.link, artist: newData.artist, image:newData.image }).then(
+                    () => {
+                        setListed(false)
+                    }
+                );
+                getData();
+            }, 600);
+        })
+    }
 
     return (
-        <Template activeMenu="songs">
-            <h3>Músicas favoritas</h3>
-            <div className={classes.root}>
+        <>
+            <Message
+                isShowing={isShowing}
+                hide={toggleModal}
+                isEdit={isEdit}
+                handleSearch={handleSearch}
+                add={onRowAdd}
+            />
+            <Template activeMenu="songs">
+                <h3>Músicas favoritas</h3>
+                <div className={classes.root}>
 
-            </div>
-            <br /><br />
-            <MaterialTable
-                title="Minhas músicas favoritas"
-                columns={state.columns}
-                data={state.data}
-                editable={{
-                    onRowAdd: (newData) =>
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                                setState((prevState) => {
-                                    const data = [...prevState.data];
-                                    api.post('/songs/add', { name: newData.name, email: localStorage.getItem("email")  }).then(
-                                        () => {
-                                            setListed(false)
-                                        }
-                                    );
-                                    data.push(newData);
-                                    return { ...prevState, data };
-                                });
-                            }, 600);
-                        }),
-                    onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                                if (oldData) {
+                </div>
+                <a onClick={() => { toggleModal() }}>
+                    <Button variant="contained" style={{backgroundColor: "#ffbb00"}}>Search</Button> 
+                </a>
+                <br /><br />
+                <MaterialTable
+                    title="Minhas músicas favoritas"
+                    columns={state.columns}
+                    data={state.data}
+                    editable={{
+                        onRowAdd,
+                        onRowUpdate: (newData, oldData) =>
+                            new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve();
+                                    if (oldData) {
+                                        setState((prevState) => {
+                                            const data = [...prevState.data];
+                                            api.post('/songs/update', { id: newData.id, name: newData.name }).then(
+                                                () => {
+                                                    setListed(false)
+                                                }
+                                            );
+                                            data[data.indexOf(oldData)] = newData;
+                                            return { ...prevState, data };
+                                        });
+                                    }
+                                }, 600);
+                            }),
+                        onRowDelete: (oldData) =>
+                            new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve();
                                     setState((prevState) => {
                                         const data = [...prevState.data];
-                                        api.post('/songs/update', { id: newData.id, name: newData.name }).then(
-                                            () => {
-                                                setListed(false)
-                                            }
-                                        );
-                                        data[data.indexOf(oldData)] = newData;
+                                        api.post('/songs/delete', { id: oldData.id });
+                                        data.splice(data.indexOf(oldData), 1);
                                         return { ...prevState, data };
                                     });
-                                }
-                            }, 600);
-                        }),
-                    onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                                setState((prevState) => {
-                                    const data = [...prevState.data];
-                                    api.post('/songs/delete', { id: oldData.id });
-                                    data.splice(data.indexOf(oldData), 1);
-                                    return { ...prevState, data };
-                                });
-                            }, 600);
-                        }),
-                }}
-            />
-
-
-
-
-        </Template>
+                                }, 600);
+                            }),
+                    }}
+                />
+            </Template>
+        </>
     )
-
-
 
 }
 

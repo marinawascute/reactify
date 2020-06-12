@@ -101,7 +101,6 @@ export default function Login({ history }) {
     event.preventDefault();
     try {
       const response = await api.post('/users/authenticate', { email: email, password: password },{withCredentials:true})
-      localStorage.setItem("email", email);
       // console.log(response);
       history.push('/home');
     } catch (error) {

@@ -1,7 +1,7 @@
 const playlistsModel = require('../models/playlistsModel');
 
 module.exports.listPlaylists = async function (req, res) {
-    let response = await playlistsModel.listPlaylists()
+    let response = await playlistsModel.listPlaylists(req.body.email)
     res.send(response);
 }
 

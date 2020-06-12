@@ -5,7 +5,7 @@ const playlists = firebase.collection("playlists");
 const uuidv4 = require('uuid/v4');
 
 
-module.exports.listPlaylists = async function () {
+module.exports.listPlaylists = async function (email) {
     return new Promise((resolve, reject) => {
 
         playlists.get().then(snapshot => {
@@ -17,6 +17,13 @@ module.exports.listPlaylists = async function () {
             snapshot.forEach(doc => {
                 items.push(Object.assign({}, { 'id': doc.id }, doc.data()));
             });
+
+            items = items.filter(x => {
+                if(x.email === email){
+                    return x;
+                }
+            });
+
             resolve(items);
         })
             .catch(err => {
@@ -42,7 +49,7 @@ module.exports.searchPlaylist = async function (data) {
             let searchResults = result.body.playlists.items.slice(0, 4);
             let response = [];
             searchResults.forEach((x,i) => {
-                response.push({image:x.images[2].url,name:x.name,link:x.external_urls.spotify})
+                response.push({image:x.images[0].url,name:x.name,link:x.external_urls.spotify})
             }) 
             resolve(response)
         });

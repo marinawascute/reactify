@@ -5,7 +5,7 @@ const albums = firebase.collection("albums");
 const uuidv4 = require('uuid/v4');
 
 
-module.exports.listAlbums = async function () {
+module.exports.listAlbums = async function (email) {
     return new Promise((resolve, reject) => {
         albums.get().then(snapshot => {
             if (snapshot.empty) {
@@ -16,6 +16,13 @@ module.exports.listAlbums = async function () {
             snapshot.forEach(doc => {
                 items.push(Object.assign({}, { 'id': doc.id }, doc.data()));
             });
+
+            items = items.filter(x => {
+                if(x.email === email){
+                    return x;
+                }
+            });
+
             resolve(items);
         })
             .catch(err => {

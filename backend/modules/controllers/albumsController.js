@@ -1,7 +1,7 @@
 const albumsModel = require('../models/albumsModel');
 
 module.exports.listAlbums = async function (req, res) {
-    let response = await albumsModel.listAlbums()
+    let response = await albumsModel.listAlbums(req.body.email)
     res.send(response);
 }
 

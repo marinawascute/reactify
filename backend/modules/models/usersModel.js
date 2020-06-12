@@ -12,7 +12,11 @@ const secret = 'mysecretsshhh';
 module.exports.addUser = async function (data) {
     return new Promise((resolve, reject) => {
         db.auth().createUserWithEmailAndPassword(data.email, data.password).then(() => {
-            resolve(201)
+            const payload = { email:data.email };
+            const token = jwt.sign(payload, secret, {
+                expiresIn: '1h'
+            });
+            resolve({token:token})
         }).catch(err => {
             resolve(err.message);
         })

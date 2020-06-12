@@ -5,7 +5,7 @@ const artists = firebase.collection("artists");
 const uuidv4 = require('uuid/v4');
 
 
-module.exports.listArtists = async function () {
+module.exports.listArtists = async function (email) {
     return new Promise((resolve, reject) => {
         artists.get().then(snapshot => {
             if (snapshot.empty) {
@@ -16,7 +16,13 @@ module.exports.listArtists = async function () {
             snapshot.forEach(doc => {
                 items.push(Object.assign({}, { 'id': doc.id }, doc.data()));
             });
+            items = items.filter(x => {
+                if(x.email === email){
+                    return x;
+                }
+            });
             resolve(items);
+
         })
             .catch(err => {
                 console.log('Error getting documents', err);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Template from '../Template';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -11,6 +11,13 @@ import MusicNoteRoundedIcon from '@material-ui/icons/MusicNoteRounded';
 import AlbumRoundedIcon from '@material-ui/icons/AlbumRounded';
 import StarsRoundedIcon from '@material-ui/icons/StarsRounded';
 import PlaylistPlayRoundedIcon from '@material-ui/icons/PlaylistPlayRounded';
+
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
 
 import api from '../../services/api';
 
@@ -109,23 +116,39 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: 161,
         borderRadius: 8,
     },
+    cardGrid: {
+        paddingTop: theme.spacing(8),
+        paddingBottom: theme.spacing(8),
+    },
+    card: {
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    cardMedia: {
+        paddingTop: '56.25%', // 16:9
+    },
+    cardContent: {
+        flexGrow: 1,
+    },
 }));
 
 const Home = () => {
 
     const classes = useStyles();
-    const [counts, setState] = React.useState({
+    const [counts, setState] = useState({
         albumCount: 0,
         playlistCount: 0,
         songCount: 0,
         artistCount: 0
     });
-    const [listed, setListed] = React.useState({
+    const [listed, setListed] = useState({
         listed: false
-    })
+    });
+    const [songs, setSongs] = useState([]);
 
     async function getDashboard() {
-        await api.post("/dashboard",{email: localStorage.getItem("email")}).then((res) => {
+        await api.post("/dashboard",{}).then((res) => {
             
             setState({
                 albumCount : res.data.albums,
@@ -138,10 +161,23 @@ const Home = () => {
         //console.log(res)
     }
 
+    async function getSongs(){
+        const response = await api.get('/songs/list', {
+        }).then( (response) => {
 
-    React.useEffect(() => {
+            console.log(response.data);
+            setSongs(response.data);
+
+        }).catch(err => console.log(err));
+    }
+
+    useEffect(() => {
         getDashboard();
     }, [listed]);
+
+    useEffect(() => {
+        getSongs();
+    }, []);
 
     return (
         <Template activeMenu="home">
@@ -181,6 +217,40 @@ const Home = () => {
                     </Grid>
                 </Grid>
                 <br /><br />
+
+                <Grid container spacing={4}>
+                    {songs.map((song) => (
+                    <Grid item key={song.id} xs={12} sm={6} md={4}>
+                        <Card className={classes.card}>
+                            <CardMedia
+                                className={classes.cardMedia}
+                                image={song.image}
+                                title={song.name}
+                            />
+                            <CardContent className={classes.cardContent}>
+                                <Typography gutterBottom variant="h5" component="h2">
+                                {song.name}
+                                </Typography>
+                                <Typography>
+                                {song.artist}
+                                </Typography>
+                            </CardContent>
+                            {/** 
+                            <CardActions>
+                                <Button size="small" color="primary">
+                                View
+                                </Button>
+                                <Button size="small" color="primary">
+                                Edit
+                                </Button>
+                            </CardActions>
+                             * 
+                            */}
+                        </Card>
+                    </Grid>
+                    ))}
+                </Grid>
+
             </div>
 
         </Template>
