@@ -48,7 +48,11 @@ module.exports.searchSong = async function (data) {
     return new Promise((resolve, reject) => {
         spotifyApi.searchTracks(data.name).then((result) => {
             let searchResults = result.body.tracks.items.slice(0, 4);
-            resolve(searchResults)
+            let response = [];
+            searchResults.forEach((x,i) => {
+                response.push({image:x.images[2].url,name:x.name,link:x.external_urls.spotify,artist:x.artists[0].name})
+            }) 
+            resolve(response)
         });
     });
 }

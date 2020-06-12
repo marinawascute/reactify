@@ -96,13 +96,13 @@ export default function Login({ history }) {
       setOpen(false);
   };
 
-  
+ 
   async function handleSubmit(event) {
     event.preventDefault();
     try {
-      const response = await api.post('/users/authenticate', { email: email, password: password });
-      //localStorage.setItem("email", email);
-      console.log(response);
+      const response = await api.post('/users/authenticate', { email: email, password: password },{withCredentials:true})
+      localStorage.setItem("email", email);
+      // console.log(response);
       history.push('/home');
     } catch (error) {
         setOpen(true);

@@ -40,7 +40,11 @@ module.exports.searchPlaylist = async function (data) {
     return new Promise((resolve, reject) => {
         spotifyApi.searchPlaylists(data.name).then((result) => {
             let searchResults = result.body.playlists.items.slice(0, 4);
-            resolve(searchResults)
+            let response = [];
+            searchResults.forEach((x,i) => {
+                response.push({image:x.images[2].url,name:x.name,link:x.external_urls.spotify})
+            }) 
+            resolve(response)
         });
     });
 }

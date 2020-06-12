@@ -16,7 +16,7 @@ function routes(app) {
         .post(verifyJWT,albumsController.deleteAlbum)
 	
 	app.route('/albums/search')
-		.get(verifyJWT,albumsController.searchAlbum)
+		.post(verifyJWT,albumsController.searchAlbum)
 
 	app.route('/albums/update')
 		.post(verifyJWT,albumsController.updateAlbum)
@@ -25,7 +25,7 @@ function routes(app) {
 		.get(verifyJWT,artistsController.listArtists)
 
 	app.route('/artists/search')
-		.get(verifyJWT,artistsController.searchArtist)
+		.post(verifyJWT,artistsController.searchArtist)
 
 	app.route('/artists/add')
 		.post(verifyJWT,artistsController.addArtist)
@@ -43,7 +43,7 @@ function routes(app) {
 		.post(verifyJWT,songsController.addSong)
 
 	app.route('/songs/search')
-		.get(verifyJWT,songsController.searchSong)
+		.post(verifyJWT,songsController.searchSong)
 
 	app.route('/songs/delete')
         .post(verifyJWT,songsController.deleteSong)
@@ -58,7 +58,7 @@ function routes(app) {
 		.post(verifyJWT,playlistsController.addPlaylist)
 
 	app.route('/playlists/search')
-		.get(verifyJWT,playlistsController.searchPlaylist)
+		.post(verifyJWT,playlistsController.searchPlaylist)
 	
 	app.route('/playlists/delete')
         .post(verifyJWT,playlistsController.deletePlaylist)

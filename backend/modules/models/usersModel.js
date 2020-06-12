@@ -6,6 +6,8 @@ const artists = firestore.collection("artists");
 const playlists = firestore.collection("playlists");
 const songs = firestore.collection("songs");
 const jwt = require("jsonwebtoken");
+const secret = 'mysecretsshhh';
+
 
 module.exports.addUser = async function (data) {
     return new Promise((resolve, reject) => {
@@ -26,6 +28,7 @@ module.exports.authenticateUser = async function (data) {
             });
             resolve({token:token})
         }).catch(err => {
+            console.log(err);
             resolve(403);
         })
     });

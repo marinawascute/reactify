@@ -63,9 +63,16 @@ module.exports.updateArtist = async function (data) {
 
 module.exports.searchArtist = async function (data) {
     return new Promise((resolve, reject) => {
+        console.log(data)
         spotifyApi.searchArtists(data.name).then((result) => {
-            let searchResults = result.body.artists.items.slice(0, 4);
-            resolve(searchResults);
+            let searchResults = result.body.artists.items.slice(0,4);
+            let response = [];
+            searchResults.forEach((x,i) => {
+                response.push({image:x.images[2].url,name:x.name,link:x.external_urls.spotify})
+            }) 
+            resolve(response);
+        }).catch(err => {
+            reject(err) 
         });
     });
 
