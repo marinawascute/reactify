@@ -3,6 +3,9 @@ import Template from '../Template';
 //import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import MaterialTable from 'material-table';
+import useModal from '../../component/modal/useModal'
+import Message from '../../component/modal/Message'
+
 
 
 
@@ -37,10 +40,20 @@ const Albums = () => {
         getData();
     },[listed]);
     
+    const {isShowing, toggleModal, isEdit, toggleEdit} = useModal();
 
     return (
+        <>
+        <Message
+        isShowing={isShowing}
+        hide={toggleModal}
+        isEdit={isEdit}
+        edit={toggleEdit}
+        state={state}
+    />
         <Template activeMenu="albums">
             <h3>Álbuns favoritos</h3>
+            <a onClick={()=>{toggleModal()}}>Search</a>
             <br /><br />
             <br />
             <MaterialTable
@@ -97,6 +110,7 @@ const Albums = () => {
                 }}
             />
         </Template>
+        </>
     )
 
 }
