@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Menu from './Menu'
 
-import imgLogo from '../assets/logo/logo-reactify-black-yellow.png'
+import imgLogo from '../assets/logo/logo-reactify-full-white.png'
 
 export default class Template extends Component {
 

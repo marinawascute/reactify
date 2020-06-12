@@ -1,9 +1,8 @@
 import React from 'react';
 import { Route, HashRouter, Switch } from 'react-router-dom';
 
-
-import Login from './component/Login';
-import Register from './component/Register';
+import Login from './pages/Login'; //./component/Login
+import Register from './pages/Register';
 import Dashboard from './component/Dashboard';
 import Albums from './component/Albums';
 import Artists from './component/Artists';

@@ -17,6 +17,7 @@ export default function Login({ history }) {
     event.preventDefault();
     try {
       let response = await api.post('/users/authenticate', { email: email, password: password });
+
       history.push('/home');
     } catch (error) {
       alert("Email ou senha errados!")
@@ -58,7 +59,7 @@ export default function Login({ history }) {
             <section>
               <Link className="back-link" to="/register">
                 Não tenho cadastro
-                </Link>
+              </Link>
             </section>
           </form>
 

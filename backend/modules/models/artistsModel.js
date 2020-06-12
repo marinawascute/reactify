@@ -5,7 +5,7 @@ const artists = firebase.collection("artists");
 const uuidv4 = require('uuid/v4');
 
 
-module.exports.listArtists = async function () {
+module.exports.listArtists = async function (email) {
     return new Promise((resolve, reject) => {
         artists.get().then(snapshot => {
             if (snapshot.empty) {
@@ -16,7 +16,13 @@ module.exports.listArtists = async function () {
             snapshot.forEach(doc => {
                 items.push(Object.assign({}, { 'id': doc.id }, doc.data()));
             });
+            items = items.filter(x => {
+                if(x.email === email){
+                    return x;
+                }
+            });
             resolve(items);
+
         })
             .catch(err => {
                 console.log('Error getting documents', err);
@@ -26,15 +32,23 @@ module.exports.listArtists = async function () {
 
 module.exports.addArtist = async function (data) {
     return new Promise((resolve, reject) => {
-        spotifyApi.searchArtists(data.name).then((result) => {
-            data.link = result.body.artists.items[0].external_urls.spotify;
-            artists.doc(uuidv4()).set(data).then(() => {
-                resolve(200)
-            });
+        artists.doc(uuidv4()).set(data).then(() => {
+            resolve(200)
         });
     });
 
 }
+// module.exports.addArtist = async function (data) {
+//     return new Promise((resolve, reject) => {
+//         spotifyApi.searchArtists(data.name).then((result) => {
+//             data.link = result.body.artists.items[0].external_urls.spotify;
+//             artists.doc(uuidv4()).set(data).then(() => {
+//                 resolve(200)
+//             });
+//         });
+//     });
+
+// }
 
 module.exports.deleteArtist = async function (data) {
     artists.doc(data.id).delete();
@@ -48,6 +62,23 @@ module.exports.updateArtist = async function (data) {
             artists.doc(data.id).update({ name: data.name, link: link }).then(() => {
                 resolve(200)
             });
+        });
+    });
+
+}
+
+module.exports.searchArtist = async function (data) {
+    return new Promise((resolve, reject) => {
+        console.log(data)
+        spotifyApi.searchArtists(data.name).then((result) => {
+            let searchResults = result.body.artists.items.slice(0,4);
+            let response = [];
+            searchResults.forEach((x,i) => {
+                response.push({image:x.images[2].url,name:x.name,link:x.external_urls.spotify})
+            }) 
+            resolve(response);
+        }).catch(err => {
+            reject(err) 
         });
     });
 

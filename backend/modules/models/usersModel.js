@@ -5,11 +5,18 @@ const albums = firestore.collection("albums");
 const artists = firestore.collection("artists");
 const playlists = firestore.collection("playlists");
 const songs = firestore.collection("songs");
+const jwt = require("jsonwebtoken");
+const secret = 'mysecretsshhh';
+
 
 module.exports.addUser = async function (data) {
     return new Promise((resolve, reject) => {
         db.auth().createUserWithEmailAndPassword(data.email, data.password).then(() => {
-            resolve(201)
+            const payload = { email:data.email };
+            const token = jwt.sign(payload, secret, {
+                expiresIn: '1h'
+            });
+            resolve({token:token})
         }).catch(err => {
             resolve(err.message);
         })
@@ -19,8 +26,13 @@ module.exports.addUser = async function (data) {
 module.exports.authenticateUser = async function (data) {
     return new Promise((resolve, reject) => {
         db.auth().signInWithEmailAndPassword(data.email, data.password).then(() => {
-            resolve(200)
+            const payload = { email:data.email };
+            const token = jwt.sign(payload, secret, {
+                expiresIn: '1h'
+            });
+            resolve({token:token})
         }).catch(err => {
+            console.log(err);
             resolve(403);
         })
     });
@@ -29,13 +41,13 @@ module.exports.authenticateUser = async function (data) {
 module.exports.dashboardCounts = async function (data) {
     return new Promise((resolve, reject) => {
         let response = {};
-        albums.where('email' ,'==', data.email).get().then(album => {
+        albums.where('email', '==', data.email).get().then(album => {
             response.albums = album.size;
-            playlists.where('email' ,'==', data.email).get().then(playlist => {
+            playlists.where('email', '==', data.email).get().then(playlist => {
                 response.playlists = playlist.size;
-                songs.where('email' ,'==', data.email).get().then(song => {
+                songs.where('email', '==', data.email).get().then(song => {
                     response.songs = song.size;
-                    artists.where('email' ,'==', data.email).get().then(artist => {
+                    artists.where('email', '==', data.email).get().then(artist => {
                         response.artists = artist.size;
                         resolve(response);
                     })

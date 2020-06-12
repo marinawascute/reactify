@@ -24,7 +24,19 @@ h2,h3,p{orphans:3;widows:3}
 h2,h3{page-break-after:avoid}}
 *,:after,:before{margin:0;padding:0;box-sizing:border-box}::-webkit-scrollbar-track{border-radius:10px;background-color:#383838}::-webkit-scrollbar{width:8px;background-color:#383838}::-webkit-scrollbar-thumb{border-radius:10px;background-color:#6b6b6b}
 html{overflow:hidden;overflow-y:auto}
-body{overflow:hidden!important;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-size:18px;line-height:1.8rem;font-family:Arial,sans-serif;color:#000;font-weight:400;background:#ffbb00}
+
+body{
+    overflow:hidden!important;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    font-size:18px;
+    line-height:1.8rem;
+    font-family:Arial,sans-serif;
+    color:#000;
+    font-weight:400;
+    /* background:#ffbb00 */
+}
+
 @media only screen and (min-width:768px) and (max-width:991px){body{font-size:16px}}
 @media only screen and (max-width:767px){body{font-size:15px}}
 img{max-width:100%}::-webkit-input-placeholder{color:#a4acc4}:-moz-placeholder,::-moz-placeholder{color:#a4acc4}:-ms-input-placeholder{color:#a4acc4}

@@ -5,7 +5,7 @@ const songs = firebase.collection("songs");
 const uuidv4 = require('uuid/v4');
 
 
-module.exports.listSongs = async function () {
+module.exports.listSongs = async function (email) {
     return new Promise((resolve, reject) => {
         songs.get().then(snapshot => {
             if (snapshot.empty) {
@@ -16,6 +16,13 @@ module.exports.listSongs = async function () {
             snapshot.forEach(doc => {
                 items.push(Object.assign({}, { 'id': doc.id }, doc.data()));
             });
+
+            items = items.filter(x => {
+                if(x.email === email){
+                    return x;
+                }
+            });
+
             resolve(items);
         })
             .catch(err => {
@@ -24,14 +31,35 @@ module.exports.listSongs = async function () {
     });
 }
 
+// module.exports.addSong = async function (data) {
+//     return new Promise((resolve, reject) => {
+//         spotifyApi.searchTracks(data.name).then((result) => {
+//             data.link = result.body.tracks.items[0].external_urls.spotify;
+//             data.artist = result.body.tracks.items[0].artists[0].name;
+//             songs.doc(uuidv4()).set(data).then(() => {
+//                 resolve(200)
+//             });
+//         });
+//     });
+// }
+
 module.exports.addSong = async function (data) {
     return new Promise((resolve, reject) => {
+        songs.doc(uuidv4()).set(data).then(() => {
+            resolve(200)
+        });
+    });
+}
+
+module.exports.searchSong = async function (data) {
+    return new Promise((resolve, reject) => {
         spotifyApi.searchTracks(data.name).then((result) => {
-            data.link = result.body.tracks.items[0].external_urls.spotify;
-            data.artist = result.body.tracks.items[0].artists[0].name;
-            songs.doc(uuidv4()).set(data).then(() => {
-                resolve(200)
-            });
+            let searchResults = result.body.tracks.items.slice(0, 4);
+            let response = [];
+            searchResults.forEach((x,i) => {
+                response.push({image:x.images[2].url,name:x.name,link:x.external_urls.spotify,artist:x.artists[0].name})
+            }) 
+            resolve(response)
         });
     });
 }

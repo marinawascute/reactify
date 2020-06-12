@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Template from '../Template';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-import ButtonBase from '@material-ui/core/ButtonBase';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 import MusicNoteRoundedIcon from '@material-ui/icons/MusicNoteRounded';
@@ -13,9 +12,14 @@ import AlbumRoundedIcon from '@material-ui/icons/AlbumRounded';
 import StarsRoundedIcon from '@material-ui/icons/StarsRounded';
 import PlaylistPlayRoundedIcon from '@material-ui/icons/PlaylistPlayRounded';
 
-import api from '../../services/api'
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
 
-
+import api from '../../services/api';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'left',
         flexWrap: 'wrap',
         verticalAlign: 'middle',
+        alignItems: 'center',
 
     },
     dash2: {
@@ -53,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'left',
         flexWrap: 'wrap',
         verticalAlign: 'middle',
-
+        alignItems: 'center',
     },
     dash3: {
         padding: theme.spacing(2),
@@ -67,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'left',
         flexWrap: 'wrap',
         verticalAlign: 'middle',
-
+        alignItems: 'center',
     },
     dash4: {
         padding: theme.spacing(2),
@@ -81,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'left',
         flexWrap: 'wrap',
         verticalAlign: 'middle',
-
+        alignItems: 'center',
     },
     boximg: {
         padding: theme.spacing(0),
@@ -111,24 +116,39 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: 161,
         borderRadius: 8,
     },
+    cardGrid: {
+        paddingTop: theme.spacing(8),
+        paddingBottom: theme.spacing(8),
+    },
+    card: {
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    cardMedia: {
+        paddingTop: '56.25%', // 16:9
+    },
+    cardContent: {
+        flexGrow: 1,
+    },
 }));
 
 const Home = () => {
 
-    const [spacing] = React.useState(2);
     const classes = useStyles();
-    const [counts, setState] = React.useState({
+    const [counts, setState] = useState({
         albumCount: 0,
         playlistCount: 0,
         songCount: 0,
         artistCount: 0
     });
-    const [listed, setListed] = React.useState({
+    const [listed, setListed] = useState({
         listed: false
-    })
+    });
+    const [songs, setSongs] = useState([]);
 
     async function getDashboard() {
-        await api.post("/dashboard",{email: localStorage.getItem("email")}).then((res) => {
+        await api.post("/dashboard",{}).then((res) => {
             
             setState({
                 albumCount : res.data.albums,
@@ -141,10 +161,23 @@ const Home = () => {
         //console.log(res)
     }
 
+    async function getSongs(){
+        const response = await api.get('/songs/list', {
+        }).then( (response) => {
 
-    React.useEffect(() => {
+            console.log(response.data);
+            setSongs(response.data);
+
+        }).catch(err => console.log(err));
+    }
+
+    useEffect(() => {
         getDashboard();
     }, [listed]);
+
+    useEffect(() => {
+        getSongs();
+    }, []);
 
     return (
         <Template activeMenu="home">
@@ -161,54 +194,63 @@ const Home = () => {
                     <Grid item xs={6} sm={3}>
                         <Paper className={classes.dash1}>
                             <ListItemIcon style={{ color: '#2196f3', minWidth: 30 }} ><MusicNoteRoundedIcon /></ListItemIcon>
-                    Músicas favoritas:<strong style={{ marginLeft: 5 }}>{counts.songCount}</strong>
+                    Músicas favoritas:<strong style={{ marginLeft: 5, alignItems: 'center' }}>{counts.songCount}</strong>
                         </Paper>
                     </Grid>
                     <Grid item xs={6} sm={3}>
                         <Paper className={classes.dash2}>
                             <ListItemIcon style={{ color: '#f44336', minWidth: 30 }} ><AlbumRoundedIcon /></ListItemIcon>
-                    Álbuns favoritos:<strong style={{ marginLeft: 5 }}>{counts.albumCount}</strong>
+                    Álbuns favoritos:<strong style={{ marginLeft: 5, alignItems: 'center' }}>{counts.albumCount}</strong>
                         </Paper>
                     </Grid>
                     <Grid item xs={6} sm={3}>
                         <Paper className={classes.dash3}>
                             <ListItemIcon style={{ color: '#808080', minWidth: 30 }}><PlaylistPlayRoundedIcon /></ListItemIcon>
-                    Playlists favoritas:<strong style={{ marginLeft: 5 }}>{counts.playlistCount}</strong>
+                    Playlists favoritas:<strong style={{ marginLeft: 5, alignItems: 'center' }}>{counts.playlistCount}</strong>
                         </Paper>
                     </Grid>
                     <Grid item xs={6} sm={3}>
                         <Paper className={classes.dash4}>
                             <ListItemIcon style={{ color: '#9c27b0', minWidth: 30 }}><StarsRoundedIcon /></ListItemIcon>
-                    Artistias favoritos:<strong style={{ marginLeft: 5 }}>{counts.artistCount}</strong>
+                    Artistias favoritos:<strong style={{ marginLeft: 5, alignItems: 'center' }}>{counts.artistCount}</strong>
                         </Paper>
                     </Grid>
                 </Grid>
-                <br /><br /><br />
-                {/* <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                        <Paper className={classes.paper} style={{ paddingLeft: 0 }}><strong>Adicionados recentimente</strong></Paper>
-                    </Grid>
+                <br /><br />
 
-                    <Grid item xs={12}>
-                        <Grid container justify="flex-start" spacing={spacing}>
-                            {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((value) => (
-                                <Grid key={value} item>
-                                    <div className={classes.root}>
-                                        <Paper className={classes.boximg}>
-                                            <Grid container spacing={2}>
-                                                <Grid item>
-                                                    <ButtonBase className={classes.image}>
-                                                        <img className={classes.img} alt="complex" src="https://upload.wikimedia.org/wikipedia/pt/thumb/3/3f/The_Beatles_-_Let_It_Be.jpg/220px-The_Beatles_-_Let_It_Be.jpg" />
-                                                    </ButtonBase>
-                                                </Grid>
-                                            </Grid>
-                                        </Paper>
-                                    </div>
-                                </Grid>
-                            ))}
-                        </Grid>
+                <Grid container spacing={4}>
+                    {songs.map((song) => (
+                    <Grid item key={song.id} xs={12} sm={6} md={4}>
+                        <Card className={classes.card}>
+                            <CardMedia
+                                className={classes.cardMedia}
+                                image={song.image}
+                                title={song.name}
+                            />
+                            <CardContent className={classes.cardContent}>
+                                <Typography gutterBottom variant="h5" component="h2">
+                                {song.name}
+                                </Typography>
+                                <Typography>
+                                {song.artist}
+                                </Typography>
+                            </CardContent>
+                            {/** 
+                            <CardActions>
+                                <Button size="small" color="primary">
+                                View
+                                </Button>
+                                <Button size="small" color="primary">
+                                Edit
+                                </Button>
+                            </CardActions>
+                             * 
+                            */}
+                        </Card>
                     </Grid>
-                </Grid> */}
+                    ))}
+                </Grid>
+
             </div>
 
         </Template>
