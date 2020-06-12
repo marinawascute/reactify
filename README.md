@@ -1,3 +1,4 @@
+![page-home-dashboard-2](https://user-images.githubusercontent.com/45245073/84552713-45b37380-ace8-11ea-8a6b-b61037299c48.png)
 
 ## :computer: Reactify
 O <b>Reactify</b> O Reactify é uma aplicação de listagem de Músicas, Álbuns, Artistas e Playlists favoritas. A listagem dos itens é consumida da API (Interface de Programação de Aplicativos) do Spotify.
