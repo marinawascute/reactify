@@ -39,6 +39,17 @@ Para clonar e executar este aplicativo, você precisará do Git (https://git-scm
   $ yarn OU npm install
 ```
 
+## :alien: Desenvolvedores
+
+[<img src="https://avatars0.githubusercontent.com/u/33879051?s=460&v=4" width=100 > <br> <sub> Alberto Neto </sub>](https://github.com/AlbertoN3to) |
+| :---: |
+
+[<img src="https://avatars2.githubusercontent.com/u/45245073?s=460&u=8807116181d96910bd10d61cc6adbde0a8dbc790&v=4" width=100 > <br> <sub> Lucas Andrade </sub>](https://github.com/lucasdzuc) | 
+| :---: |
+
+[<img src="https://avatars3.githubusercontent.com/u/13422328?s=460&u=b4f55c47e39304f5c3686fa3f28d538b8628d4c4&v=4" width=100 > <br> <sub> Marina Pontes </sub>](https://github.com/marinawascute) | 
+| :---: |
+
 <h2>🤝  Agradecimentos</h2>
 
 Agradecemos o professor [Fabio Santos](https://github.com/fss6) por nos trazer o desafio de construir uma aplicação utilizando as tecnológias citadas acima.
