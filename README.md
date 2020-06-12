@@ -7,7 +7,7 @@ O <b>Reactify</b> O Reactify é uma aplicação de listagem de Músicas, Álbuns
 
 Este projeto foi desenvolvido com as seguintes tecnologias:
 
-- [React](https://github.com/facebook/react)
+- [React](https://pt-br.reactjs.org/)
 - [Node](https://nodejs.org/en/download/)
 - [Material - UI](https://material-ui.com/)
 - [Express](https://expressjs.com/pt-br/)
